@@ -1,0 +1,71 @@
+{% include 'includes/header.html' %}
+
+<div class="container mt-5">
+    {% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">👥 Personnel Directory</h3>
+            <a href="{% url 'personnel_create' %}" class="btn btn-outline-light">
+                + Add New Member
+            </a>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-4">Here you can manage all team members assigned to specific aircraft projects.</p>
+            <div class="table-responsive">
+                <table id="personnelTable" class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 5%;">ID</th> 
+                            <th style="width: 30%;">Full Name</th>
+                            <th style="width: 30%;">Assigned Team</th> 
+                            <th style="width: 35%;">Actions</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'includes/footer.html' %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#personnelTable').DataTable({
+            "processing": true, 
+            "serverSide": true,  
+            "ajax": {
+                "url": "{% url 'personnel_data' %}", 
+                "type": "GET"  
+            },
+            "columns": [
+                { "data": "id" },  
+                { "data": "name" }, 
+                { "data": "team__name" }, 
+                {
+                    "data": "id",  
+                    "render": function (data, type, row, meta) {
+                        var updateUrl = '{% url "personnel_update" 0 %}'.replace('0', data);  
+                        var deleteUrl = '{% url "personnel_delete" 0 %}'.replace('0', data);  
+                        return '<a href="' + updateUrl + '" class="btn btn-outline-warning btn-sm me-2"><i class="fas fa-edit"></i> Edit</a>' +
+                               '<a href="' + deleteUrl + '" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>';
+                    }
+                }
+            ]
+        });
+    });
+</script>

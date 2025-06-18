@@ -1,0 +1,16 @@
+{% include 'includes/header.html' %}
+
+<div class="container mt-5">
+    <h2>Add New Personnel</h2>
+    
+    <form method="post">
+        {% csrf_token %}  
+        {{ form.as_p }}  
+        
+        <button type="submit" class="btn btn-success">Add Personnel</button>
+        
+        <a href="{% url 'personnel_list' %}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+{% include 'includes/footer.html' %}
